@@ -2,12 +2,14 @@ const fs = require('fs')
 const Discord = require('discord.js');
 const Client = require('./client/Client');
 require('dotenv').config();
-const prefix = process.env.PREFIX;
-const token = process.env.TOKEN;
-const port = process.env.PORT;
+const prefix = process.env.prefix;
+const token = process.env.token;
+const port = process.env.port;
 const express = require('express')
 const app = express()
-
+console.log("port", port)
+console.log("token", token.slice(-4))
+console.log("prefix", prefix)
 app.get('/', (req, res) => {
   res.send('Bot OK!')
 })
