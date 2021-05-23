@@ -1,10 +1,22 @@
 const fs = require('fs')
 const Discord = require('discord.js');
 const Client = require('./client/Client');
-const {
-	prefix,
-	token,
-} = require('./config.json');
+require('dotenv').config();
+const prefix = process.env.PREFIX;
+const token = process.env.TOKEN;
+const port = process.env.PORT;
+const express = require('express')
+const app = express()
+
+app.get('/', (req, res) => {
+  res.send('Bot OK!')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening at port : ${port}`)
+})
+
+
 
 const client = new Client();
 client.commands = new Discord.Collection();
