@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node discord.js"
+    "start": "node discord.js",
+    "dev": "nodemen discord.js"
   },
   "keywords": [
     "discord",
