@@ -28,8 +28,6 @@ for (const file of commandFiles) {
 	client.commands.set(command.name, command);
 }
 
-console.log(client.commands);
-
 client.once('ready', () => {
 	console.log('Ready!');
 });
