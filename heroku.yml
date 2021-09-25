@@ -3,4 +3,4 @@ build:
     worker: Dockerfile
 run:
   worker: node discord.js
-  # web: node discord.js
+  web: node discord.js
