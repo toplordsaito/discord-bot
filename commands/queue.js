@@ -17,9 +17,6 @@ module.exports = {
             embed.addField(`-------------------------------`, `song: ${song.title}`)
         }
         message.channel.send(embed);
-        return message.channel.send(`Now playing: ${serverQueue.songs[0].title}`);
-
-
-
+        // return message.channel.send(`Now playing: ${serverQueue.songs[0].title}`);
     },
 };
