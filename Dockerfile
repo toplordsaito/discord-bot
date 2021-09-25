@@ -10,5 +10,5 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
-
-CMD [ "node", "index.js" ]
+EXPOSE 3000
+CMD [ "node", "discord.js" ]
