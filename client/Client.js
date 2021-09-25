@@ -11,6 +11,8 @@ module.exports = class extends Client {
 
 		this.queue = new Map();
 
+		this.setting = new Map();
+
 		this.config = config;
 	}
 };

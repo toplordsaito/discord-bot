@@ -28,13 +28,20 @@ module.exports = {
       };
 
       if (!serverQueue) {
+        if (!message.client.setting.get(message.guild.id)){
+          const settingContruct = {
+            auto_play: true
+          }
+          message.client.setting.set(message.guild.id, settingContruct)
+        }
         const queueContruct = {
           textChannel: message.channel,
           voiceChannel: voiceChannel,
           connection: null,
           songs: [],
           volume: 5,
-          playing: true
+          playing: true,
+          last_song: "",
         };
         queue.set(message.guild.id, queueContruct);
         queueContruct.songs.push(song);
@@ -59,17 +66,38 @@ module.exports = {
     }
   },
 
-  play(message, song) {
+  async play(message, song) {
     const queue = message.client.queue;
+    const setting = message.client.setting;
+
     const guild = message.guild;
     const serverQueue = queue.get(message.guild.id);
+    const serverSetting = setting.get(message.guild.id);
 
     if (!song) {
-      serverQueue.voiceChannel.leave();
-      queue.delete(guild.id);
-      return;
+      if (serverSetting.auto_play) {
+        console.log("starting random. . .")
+        const old_song = await ytdl.getInfo(serverQueue.last_song.url);
+        const related_songs = old_song.related_videos
+        const random_song = related_songs[Math.floor(Math.random() * related_songs.length)];
+        const songInfo = await ytdl.getInfo(random_song.id)
+        song = {
+          title: songInfo.videoDetails.title,
+          url: songInfo.videoDetails.video_url
+        };
+        serverQueue.songs.push(song);
+        message.channel.send(
+          `(auto-add) ${song.title} has been added to the queue!`
+        );
+        console.log("song : ", song.title)
+        console.log("ending random. . .")
+      } else {
+        serverQueue.voiceChannel.leave();
+        queue.delete(guild.id);
+        return;
+      }
     }
-
+    serverQueue.last_song = song
     const dispatcher = serverQueue.connection
       .play(ytdl(song.url))
       .on("finish", () => {
@@ -79,5 +107,6 @@ module.exports = {
       .on("error", error => console.error(error));
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
     serverQueue.textChannel.send(`Start playing: **${song.title}**`);
-  }
+  },
+
 };
