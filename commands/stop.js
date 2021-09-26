@@ -6,10 +6,10 @@ module.exports = {
 		// const serverSetting = message.client.setting.get(message.guild.id);
 		// serverSetting.auto_play = false
 		if (!message.member.voice.channel) return message.channel.send('You have to be in a voice channel to stop the music!');
-		serverQueue.songs = [];
+		// serverQueue.songs = [];
 		serverQueue.voiceChannel.leave();
-		serverQueue.connection.dispatcher.end();
-		queue.delete(guild.id);
+		// serverQueue.connection.dispatcher.end();
+		message.client.queue.delete(message.guild.id);
 		
 	},
 };
