@@ -23,13 +23,26 @@ app.listen(port, () => {
 const client = new Client();
 client.commands = new Discord.Collection();
 
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-
-for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-	client.commands.set(command.name, command);
+function getFiles (dir, files_){
+    files_ = files_ || [];
+    var files = fs.readdirSync(dir);
+    for (var i in files){
+        var name = dir + '/' + files[i];
+        if (fs.statSync(name).isDirectory()){
+            getFiles(name, files_);
+        } else if (name.endsWith('.js')) {
+            files_.push(name);
+        }
+    }
+    return files_;
 }
 
+const commandFiles = getFiles('./commands')
+
+for (const file of commandFiles) {
+	const command = require(`${file}`);
+	client.commands.set(command.name, command);
+}
 client.once('ready', () => {
 	console.log('Ready!');
 });
@@ -51,11 +64,7 @@ client.on('message', async message => {
 	if (!message.content.startsWith(prefix)) return;
 
 	try {
-		if(commandName == "ban" || commandName == "userinfo") {
-			command.execute(message, client);
-		} else {
-			command.execute(message);
-		}
+		command.execute(message);
 	} catch (error) {
 		console.error(error);
 		message.reply('There was an error trying to execute that command!');
