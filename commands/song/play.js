@@ -30,7 +30,8 @@ module.exports = {
       if (!serverQueue) {
         if (!message.client.setting.get(message.guild.id)){
           const settingContruct = {
-            auto_play: true
+            auto_play: true,
+            volume: 5
           }
           message.client.setting.set(message.guild.id, settingContruct)
         }
@@ -39,7 +40,6 @@ module.exports = {
           voiceChannel: voiceChannel,
           connection: null,
           songs: [],
-          volume: 5,
           playing: true,
           last_song: "",
         };
@@ -105,7 +105,7 @@ module.exports = {
         this.play(message, serverQueue.songs[0]);
       })
       .on("error", error => console.error(error));
-    dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+    dispatcher.setVolumeLogarithmic(serverSetting.volume / 5);
     serverQueue.textChannel.send(`Start playing: **${song.title}**`);
   },
 
