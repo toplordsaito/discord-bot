@@ -28,9 +28,9 @@ module.exports = {
       };
 
       if (!serverQueue) {
-        if (!message.client.setting.get(message.guild.id)){
+        if (!message.client.setting.get(message.guild.id)) {
           const settingContruct = {
-            auto_play: true,
+            auto_play: "first",
             volume: 5
           }
           message.client.setting.set(message.guild.id, settingContruct)
@@ -79,7 +79,11 @@ module.exports = {
         console.log("starting random. . .")
         const old_song = await ytdl.getInfo(serverQueue.last_song.url);
         const related_songs = old_song.related_videos
-        const random_song = related_songs[Math.floor(Math.random() * related_songs.length)];
+        if (serverSetting.auto_play == "first") {
+          random_song = related_songs[Math.floor(Math.random() * related_songs.length)];
+        }else{//serverSetting.auto_play == "random"
+          random_song = related_songs[0]
+        }
         const songInfo = await ytdl.getInfo(random_song.id)
         song = {
           title: songInfo.videoDetails.title,
